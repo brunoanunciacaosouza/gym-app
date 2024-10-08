@@ -35,6 +35,14 @@ export function SignIn() {
 
           <Button title="Acessar" />
         </Center>
+
+        <Center flex={1} justifyContent="flex-end" mt="$4">
+          <Text color="#E1E1E6" fontSize="$sm" mb="$3" fontFamily="$body">
+            Ainda não tem acesso?
+          </Text>
+
+          <Button title="Criar conta" variant="outline" />
+        </Center>
       </VStack>
     </VStack>
   );
