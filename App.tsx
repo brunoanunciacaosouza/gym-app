@@ -6,8 +6,9 @@ import {
 } from "@expo-google-fonts/roboto";
 
 import { GluestackUIProvider, Text, Center } from "@gluestack-ui/themed";
-
 import { config } from "@gluestack-ui/config";
+
+import { Loading } from "@components/Loading";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -23,12 +24,14 @@ export default function App() {
         translucent
       />
 
-      {fontsLoaded && (
+      {fontsLoaded ? (
         <Center flex={1} bg="$backgroundDark500">
           <Text color="white" fontSize={34}>
             Home
           </Text>
         </Center>
+      ) : (
+        <Loading/>
       )}
     </GluestackUIProvider>
   );
