@@ -1,10 +1,11 @@
 import { FlatList } from "react-native";
 import { useState } from "react";
 
-import { HStack, VStack } from "@gluestack-ui/themed";
+import { Heading, HStack, Text, VStack } from "@gluestack-ui/themed";
 
 import { Group } from "@components/Group";
 import { HomeHeader } from "@components/HomeHeader";
+import { ExerciseCard } from "@components/ExerciseCard";
 
 export function Home() {
   const [groups, setGroups] = useState([
@@ -40,6 +41,20 @@ export function Home() {
           minHeight: 44,
         }}
       />
+
+      <VStack px="$8">
+        <HStack justifyContent="space-between" mb="$5" alignItems="center">
+          <Heading color="#C4C4CC" fontSize="$md" fontFamily="$heading">
+            Exercícios
+          </Heading>
+
+          <Text color="#C4C4CC" fontSize="$sm" fontFamily="$body">
+            4
+          </Text>
+        </HStack>
+
+        <ExerciseCard />
+      </VStack>
     </VStack>
   );
 }
