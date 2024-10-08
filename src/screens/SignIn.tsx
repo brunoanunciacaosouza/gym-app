@@ -3,6 +3,7 @@ import { Center, Heading, Image, Text, VStack } from "@gluestack-ui/themed";
 import BackgroundImg from "@assets/background.png";
 import Logo from "@assets/logo.svg";
 import { Input } from "@components/Input";
+import { Button } from "@components/Button";
 
 export function SignIn() {
   return (
@@ -29,7 +30,10 @@ export function SignIn() {
           <Heading color="#E1E1E6">Acesse a conta</Heading>
 
           <Input placeholder="E-mail" keyboardType="email-address" />
+
           <Input placeholder="Senha" secureTextEntry />
+
+          <Button title="Acessar" />
         </Center>
       </VStack>
     </VStack>
