@@ -3,7 +3,7 @@ import {
   Roboto_700Bold,
   useFonts,
 } from "@expo-google-fonts/roboto";
-import { Text, View } from "react-native";
+import { StatusBar, Text, View } from "react-native";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -12,10 +12,11 @@ export default function App() {
   });
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: '#202024' }}>
       {fontsLoaded && (
         <Text style={{ fontFamily: "Roboto_700Bold", fontSize: 44 }}>Home</Text>
       )}
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent/>
     </View>
   );
 }
