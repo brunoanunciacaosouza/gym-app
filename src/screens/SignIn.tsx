@@ -28,8 +28,8 @@ export function SignIn() {
         <Center gap="$2">
           <Heading color="#E1E1E6">Acesse a conta</Heading>
 
-          <Input placeholder="E-mail" />
-          <Input placeholder="Senha" />
+          <Input placeholder="E-mail" keyboardType="email-address" />
+          <Input placeholder="Senha" secureTextEntry />
         </Center>
       </VStack>
     </VStack>
