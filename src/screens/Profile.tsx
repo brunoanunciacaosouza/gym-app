@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Alert, ScrollView, TouchableOpacity } from "react-native";
-import { VStack, Center, Text, Heading } from "@gluestack-ui/themed";
+import { ScrollView, TouchableOpacity } from "react-native";
+import { VStack, Center, Text, Heading, useToast } from "@gluestack-ui/themed";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 
@@ -14,6 +14,8 @@ export function Profile() {
   const [userPhoto, setUserPhoto] = useState(
     "https://avatars.githubusercontent.com/u/85529074?v=4"
   );
+
+  const toast = useToast();
 
   async function HandleUserPhotoSelect() {
     try {
@@ -36,9 +38,18 @@ export function Profile() {
         };
 
         if (photoInfo.size && photoInfo.size / 1024 / 1024 > 5) {
-          return Alert.alert(
-            "Essa imagem é muito grande. Escolha uma de até 5mb"
-          );
+          return toast.show({
+            placement: "top",
+            render: ({ id }) => (
+              <ToastMessage
+                id={id}
+                action="error"
+                title="Imagem muito grande"
+                description="Essa imagem é muito grande. Escolha uma de até 5mb"
+                onClose={() => toast.close(id)}
+              />
+            ),
+          });
         }
 
         setUserPhoto(photoUri);
@@ -51,7 +62,7 @@ export function Profile() {
   return (
     <VStack flex={1}>
       <ScreenHeader title="Perfil" />
-      
+
       <ScrollView
         contentContainerStyle={{ paddingBottom: 36 }}
         showsVerticalScrollIndicator={false}
