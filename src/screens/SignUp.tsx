@@ -21,14 +21,14 @@ import Logo from "@assets/logo.svg";
 export function SignUp() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
-  const { control } = useForm();
+  const { control, handleSubmit } = useForm();
 
   function handleGoBack() {
     navigation.navigate("signIn");
   }
 
-  function handleSignUp() {
-    console.log(name);
+  function handleSignUp(data: any) {
+    console.log(data);
   }
 
   return (
@@ -105,11 +105,16 @@ export function SignUp() {
                   secureTextEntry
                   onChangeText={onChange}
                   value={value}
+                  onSubmitEditing={handleSubmit(handleSignUp)}
+                  returnKeyType="send"
                 />
               )}
             />
 
-            <Button title="Criar e acessar" onPress={handleSignUp} />
+            <Button
+              title="Criar e acessar"
+              onPress={handleSubmit(handleSignUp)}
+            />
           </Center>
 
           <Button
