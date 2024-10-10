@@ -18,16 +18,23 @@ import { Button } from "@components/Button";
 import BackgroundImg from "@assets/background.png";
 import Logo from "@assets/logo.svg";
 
+type FormDataProps = {
+  name: string;
+  email: string;
+  password: string;
+  password_confirm: string;
+}
+
 export function SignUp() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit } = useForm<FormDataProps>();
 
   function handleGoBack() {
     navigation.navigate("signIn");
   }
 
-  function handleSignUp(data: any) {
+  function handleSignUp(data: FormDataProps) {
     console.log(data);
   }
 
