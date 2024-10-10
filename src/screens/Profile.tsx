@@ -1,12 +1,33 @@
 import { ScrollView, TouchableOpacity } from "react-native";
 import { VStack, Center, Text, Heading } from "@gluestack-ui/themed";
+import * as ImagePicker from "expo-image-picker";
 
 import { ScreenHeader } from "@components/ScreenHeader";
 import { UserPhoto } from "@components/UserPhoto";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { useState } from "react";
 
 export function Profile() {
+  const [userPhoto, setUserPhoto] = useState(
+    "https://avatars.githubusercontent.com/u/85529074?v=4"
+  );
+
+  async function HandleUserPhotoSelect() {
+    const photoSelected = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+      aspect: [4, 4],
+      allowsEditing: true,
+    });
+
+    if (photoSelected.canceled) {
+      return;
+    }
+
+    setUserPhoto(photoSelected.assets[0].uri);
+  }
+
   return (
     <VStack flex={1}>
       <ScreenHeader title="Perfil" />
@@ -18,13 +39,13 @@ export function Profile() {
         <Center mt="$6" px="$10">
           <UserPhoto
             source={{
-              uri: "https://avatars.githubusercontent.com/u/85529074?v=4",
+              uri: userPhoto,
             }}
             alt="Foto do usuário"
             size="xl"
           />
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={HandleUserPhotoSelect}>
             <Text
               color="$green500"
               fontFamily="$heading"
@@ -63,7 +84,7 @@ export function Profile() {
               secureTextEntry
             />
 
-            <Button title="Atualizar"/>
+            <Button title="Atualizar" />
           </Center>
         </Center>
       </ScrollView>
