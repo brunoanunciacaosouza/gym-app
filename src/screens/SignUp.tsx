@@ -23,12 +23,23 @@ type FormDataProps = {
   email: string;
   password: string;
   password_confirm: string;
-}
+};
 
 export function SignUp() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
-  const { control, handleSubmit } = useForm<FormDataProps>();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataProps>({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      password_confirm: "",
+    },
+  });
 
   function handleGoBack() {
     navigation.navigate("signIn");
@@ -68,6 +79,9 @@ export function SignUp() {
             <Controller
               control={control}
               name="name"
+              rules={{
+                required: "Informe o nome.",
+              }}
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="Nome"
@@ -77,9 +91,20 @@ export function SignUp() {
               )}
             />
 
+            {errors.name?.message && (
+              <Text color="$white">{errors.name?.message}</Text>
+            )}
+
             <Controller
               control={control}
               name="email"
+              rules={{
+                required: "Informe o e-mail",
+                pattern: {
+                  value: /^[A-Z0-9,_%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "E-mail inválido",
+                },
+              }}
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="E-mail"
@@ -89,6 +114,10 @@ export function SignUp() {
                 />
               )}
             />
+
+            {errors.email?.message && (
+              <Text color="$white">{errors.email?.message}</Text>
+            )}
 
             <Controller
               control={control}
