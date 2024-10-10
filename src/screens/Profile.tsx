@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Alert, ScrollView, TouchableOpacity } from "react-native";
 import { VStack, Center, Text, Heading } from "@gluestack-ui/themed";
 import * as ImagePicker from "expo-image-picker";
@@ -7,7 +8,7 @@ import { ScreenHeader } from "@components/ScreenHeader";
 import { UserPhoto } from "@components/UserPhoto";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
-import { useState } from "react";
+import { ToastMessage } from "@components/ToastMessage";
 
 export function Profile() {
   const [userPhoto, setUserPhoto] = useState(
@@ -50,7 +51,7 @@ export function Profile() {
   return (
     <VStack flex={1}>
       <ScreenHeader title="Perfil" />
-
+      
       <ScrollView
         contentContainerStyle={{ paddingBottom: 36 }}
         showsVerticalScrollIndicator={false}
