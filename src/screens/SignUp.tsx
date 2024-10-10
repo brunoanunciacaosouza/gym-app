@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import {
@@ -11,16 +12,26 @@ import {
 
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 
-import BackgroundImg from "@assets/background.png";
-import Logo from "@assets/logo.svg";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+
+import BackgroundImg from "@assets/background.png";
+import Logo from "@assets/logo.svg";
 
 export function SignUp() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+
   function handleGoBack() {
     navigation.navigate("signIn");
+  }
+
+  function handleSignUp() {
+    console.log(name);
   }
 
   return (
@@ -50,13 +61,27 @@ export function SignUp() {
           <Center gap="$2" flex={1}>
             <Heading color="#E1E1E6">Crie sua conta</Heading>
 
-            <Input placeholder="Nome" />
+            <Input placeholder="Nome" onChangeText={setName} />
 
-            <Input placeholder="E-mail" keyboardType="email-address" />
+            <Input
+              placeholder="E-mail"
+              keyboardType="email-address"
+              onChangeText={setEmail}
+            />
 
-            <Input placeholder="Senha" secureTextEntry />
+            <Input
+              placeholder="Senha"
+              secureTextEntry
+              onChangeText={setPassword}
+            />
 
-            <Button title="Criar e acessar" />
+            <Input
+              placeholder="Confirme a senha"
+              secureTextEntry
+              onChangeText={setPasswordConfirm}
+            />
+
+            <Button title="Criar e acessar" onPress={handleSignUp} />
           </Center>
 
           <Button
