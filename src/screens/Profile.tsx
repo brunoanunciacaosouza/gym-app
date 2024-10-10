@@ -1,15 +1,20 @@
 import { ScrollView, TouchableOpacity } from "react-native";
-import { VStack, Center, Text } from "@gluestack-ui/themed";
+import { VStack, Center, Text, Heading } from "@gluestack-ui/themed";
 
 import { ScreenHeader } from "@components/ScreenHeader";
 import { UserPhoto } from "@components/UserPhoto";
+import { Input } from "@components/Input";
+import { Button } from "@components/Button";
 
 export function Profile() {
   return (
     <VStack flex={1}>
       <ScreenHeader title="Perfil" />
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 36 }}
+        showsVerticalScrollIndicator={false}
+      >
         <Center mt="$6" px="$10">
           <UserPhoto
             source={{
@@ -19,8 +24,7 @@ export function Profile() {
             size="xl"
           />
 
-          <TouchableOpacity
-          >
+          <TouchableOpacity>
             <Text
               color="$green500"
               fontFamily="$heading"
@@ -33,6 +37,34 @@ export function Profile() {
               Alterar foto
             </Text>
           </TouchableOpacity>
+
+          <Center w="$full" gap="$4">
+            <Input placeholder="Nome" bg="#202024" />
+            <Input value="email@email.com" bg="#202024" isReadOnly />
+          </Center>
+
+          <Heading
+            alignSelf="flex-start"
+            fontFamily="$heading"
+            color="#C4C4CC"
+            fontSize="$md"
+            mt="$12"
+            mb="$2"
+          >
+            Alterar senha
+          </Heading>
+
+          <Center w="$full" gap="$4">
+            <Input placeholder="Senha antiga" bg="#202024" secureTextEntry />
+            <Input placeholder="Nova senha" bg="#202024" secureTextEntry />
+            <Input
+              placeholder="Confirme a nova senha"
+              bg="#202024"
+              secureTextEntry
+            />
+
+            <Button title="Atualizar"/>
+          </Center>
         </Center>
       </ScrollView>
     </VStack>
