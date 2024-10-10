@@ -1,6 +1,7 @@
-import { ScrollView, TouchableOpacity } from "react-native";
+import { Alert, ScrollView, TouchableOpacity } from "react-native";
 import { VStack, Center, Text, Heading } from "@gluestack-ui/themed";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 
 import { ScreenHeader } from "@components/ScreenHeader";
 import { UserPhoto } from "@components/UserPhoto";
@@ -25,7 +26,21 @@ export function Profile() {
       return;
     }
 
-    setUserPhoto(photoSelected.assets[0].uri);
+    const photoUri = photoSelected.assets[0].uri;
+
+    if (photoUri) {
+      const photoInfo = (await FileSystem.getInfoAsync(photoUri)) as {
+        size: number;
+      };
+
+      if (photoInfo.size && photoInfo.size / 1024 / 1024 > 5) {
+        return Alert.alert(
+          "Essa imagem é muito grande. Escolha uma de até 5mb"
+        );
+      }
+
+      setUserPhoto(photoUri);
+    }
   }
 
   return (
