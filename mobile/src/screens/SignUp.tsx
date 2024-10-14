@@ -1,7 +1,7 @@
-import { useNavigation } from "@react-navigation/native";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import { useNavigation } from '@react-navigation/native';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 import {
   Center,
@@ -10,15 +10,17 @@ import {
   Text,
   VStack,
   ScrollView,
-} from "@gluestack-ui/themed";
+} from '@gluestack-ui/themed';
 
-import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
+import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
 
-import { Input } from "@components/Input";
-import { Button } from "@components/Button";
+import { Input } from '@components/Input';
+import { Button } from '@components/Button';
 
-import BackgroundImg from "@assets/background.png";
-import Logo from "@assets/logo.svg";
+import BackgroundImg from '@assets/background.png';
+import Logo from '@assets/logo.svg';
+
+import { api } from '@services/api';
 
 type FormDataProps = {
   name: string;
@@ -28,16 +30,16 @@ type FormDataProps = {
 };
 
 const signUpSchema = yup.object({
-  name: yup.string().required("Informe o nome"),
-  email: yup.string().required("Informe o e-mail").email("E-mail inválido"),
+  name: yup.string().required('Informe o nome'),
+  email: yup.string().required('Informe o e-mail').email('E-mail inválido'),
   password: yup
     .string()
-    .required("Informe a senha")
-    .min(6, "A senha deve ter pelo menos 6 dígitos."),
+    .required('Informe a senha')
+    .min(6, 'A senha deve ter pelo menos 6 dígitos.'),
   password_confirm: yup
     .string()
-    .required("Confirme a senha.")
-    .oneOf([yup.ref("password")], "A confirmação da senha não confere"),
+    .required('Confirme a senha.')
+    .oneOf([yup.ref('password')], 'A confirmação da senha não confere'),
 });
 
 export function SignUp() {
@@ -52,11 +54,15 @@ export function SignUp() {
   });
 
   function handleGoBack() {
-    navigation.navigate("signIn");
+    navigation.navigate('signIn');
   }
 
-  function handleSignUp(data: FormDataProps) {
-    console.log(data);
+  async function handleSignUp({ name, email, password }: FormDataProps) {
+    await api.post('/users', {
+      name,
+      email,
+      password,
+    });
   }
 
   return (
