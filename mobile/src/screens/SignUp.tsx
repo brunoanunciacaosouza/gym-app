@@ -20,6 +20,7 @@ import { Button } from '@components/Button';
 import BackgroundImg from '@assets/background.png';
 import Logo from '@assets/logo.svg';
 
+import axios from 'axios';
 import { api } from '@services/api';
 
 type FormDataProps = {
@@ -58,11 +59,17 @@ export function SignUp() {
   }
 
   async function handleSignUp({ name, email, password }: FormDataProps) {
-    await api.post('/users', {
-      name,
-      email,
-      password,
-    });
+    try {
+      await api.post('/users', {
+        name,
+        email,
+        password,
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log(error.response?.data.message);
+      }
+    }
   }
 
   return (
