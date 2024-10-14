@@ -10,6 +10,7 @@ import {
   Text,
   VStack,
   ScrollView,
+  useToast,
 } from '@gluestack-ui/themed';
 
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
@@ -20,8 +21,9 @@ import { Button } from '@components/Button';
 import BackgroundImg from '@assets/background.png';
 import Logo from '@assets/logo.svg';
 
-import axios from 'axios';
 import { api } from '@services/api';
+import { AppError } from '@utils/AppError';
+import { ToastMessage } from '@components/ToastMessage';
 
 type FormDataProps = {
   name: string;
@@ -45,6 +47,7 @@ const signUpSchema = yup.object({
 
 export function SignUp() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
+  const toast = useToast();
 
   const {
     control,
@@ -66,9 +69,23 @@ export function SignUp() {
         password,
       });
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log(error.response?.data.message);
-      }
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível criar a conta';
+
+      toast.show({
+        placement: 'top',
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            description="Tente novamente mais tarde."
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
     }
   }
 
