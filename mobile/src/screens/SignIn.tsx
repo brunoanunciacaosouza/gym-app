@@ -1,8 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
 
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 import {
   Center,
@@ -11,15 +11,16 @@ import {
   Text,
   VStack,
   ScrollView,
-} from "@gluestack-ui/themed";
+} from '@gluestack-ui/themed';
 
-import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
+import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
 
-import BackgroundImg from "@assets/background.png";
-import Logo from "@assets/logo.svg";
+import BackgroundImg from '@assets/background.png';
+import Logo from '@assets/logo.svg';
 
-import { Input } from "@components/Input";
-import { Button } from "@components/Button";
+import { Input } from '@components/Input';
+import { Button } from '@components/Button';
+import { useAuth } from '@hooks/useAuth';
 
 type FormDataProps = {
   email: string;
@@ -27,14 +28,15 @@ type FormDataProps = {
 };
 
 const signInSchema = yup.object({
-  email: yup.string().required("Informe o e-mail").email("E-mail inválido"),
+  email: yup.string().required('Informe o e-mail').email('E-mail inválido'),
   password: yup
     .string()
-    .required("Informe a senha")
-    .min(6, "A senha deve ter pelo menos 6 dígitos."),
+    .required('Informe a senha')
+    .min(6, 'A senha deve ter pelo menos 6 dígitos.'),
 });
 
 export function SignIn() {
+  const { signIn } = useAuth();
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
   const {
@@ -46,11 +48,11 @@ export function SignIn() {
   });
 
   function handleNewAccount() {
-    navigation.navigate("signUp");
+    navigation.navigate('signUp');
   }
 
-  function handleSigIn(data: FormDataProps) {
-    console.log(data);
+  async function handleSigIn({ email, password }: FormDataProps) {
+    signIn(email, password);
   }
 
   return (
