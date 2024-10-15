@@ -19,7 +19,7 @@ ___
 ## 🎨 Layout
 Imagens da aplicação são vistas abaixo:
 
-![Capa](/assets/preview.png)
+![Capa](/mobile//assets/preview.png)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 #### 🚧 Executando o Front-end
 ```bash
 # Acesse a pasta da aplicação
-$ cd gym-app
+$ cd gym-app/mobile
 
 # Instale as dependências necessárias
 $ npm install
@@ -69,6 +69,18 @@ $ npm run start
 # Abra o Expo Go que acabou de instalar, e então escaneie o QR Code através do aplicativo.
 
 # A aplicação então será exibida de forma 100% funcional diretamente em seu celular.
+
+```
+#### 🚧 Executando o Back-end
+```bash
+# Acesse a pasta da aplicação
+$ cd gym-app/api
+
+# Instale as dependências necessárias
+$ npm install
+
+# Agora inicie a aplicação - Um QR Code será exibido no Terminal
+$ npm run start
 
 ```
 
