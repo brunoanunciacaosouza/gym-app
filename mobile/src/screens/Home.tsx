@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 import { Heading, HStack, Text, useToast, VStack } from '@gluestack-ui/themed';
 
@@ -20,12 +20,7 @@ export function Home() {
 
   const [groups, setGroups] = useState<string[]>([]);
   const [groupSelected, setGroupSelected] = useState('Costas');
-  const [exercises, setExercises] = useState([
-    'Puxada frontal',
-    'Remada curvada',
-    'Remada unilateral',
-    'Levantamento terra',
-  ]);
+  const [exercises, setExercises] = useState<string[]>([]);
 
   function handleOpenExercisesDetails() {
     navigation.navigate('exercise');
@@ -40,7 +35,34 @@ export function Home() {
 
       const title = isAppError
         ? error.message
-        : 'Não foi possível realizar o login';
+        : 'Não foi possível carregar os grupos musculares';
+
+      toast.show({
+        placement: 'top',
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            description={'Tente novamente.'}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    }
+  }
+
+  async function fetchExercisesByGroup() {
+    try {
+      const { data } = await api.get(`/exercises/bygroup/${groupSelected}`);
+
+      setExercises(data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível carregar os exercícios';
 
       toast.show({
         placement: 'top',
@@ -60,6 +82,12 @@ export function Home() {
   useEffect(() => {
     fetchGroups();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchExercisesByGroup();
+    }, [groupSelected]),
+  );
 
   return (
     <VStack flex={1}>
