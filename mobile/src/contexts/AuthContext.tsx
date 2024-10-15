@@ -22,8 +22,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       if (data.user) {
         setUser(data.user);
       }
-
-      console.log(user);
     } catch (error) {
       throw error;
     }

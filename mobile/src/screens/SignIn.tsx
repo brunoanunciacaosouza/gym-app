@@ -11,6 +11,7 @@ import {
   Text,
   VStack,
   ScrollView,
+  useToast,
 } from '@gluestack-ui/themed';
 
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
@@ -20,7 +21,10 @@ import Logo from '@assets/logo.svg';
 
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
+import { ToastMessage } from '@components/ToastMessage';
+
 import { useAuth } from '@hooks/useAuth';
+import { AppError } from '@utils/AppError';
 
 type FormDataProps = {
   email: string;
@@ -37,6 +41,7 @@ const signInSchema = yup.object({
 
 export function SignIn() {
   const { signIn } = useAuth();
+  const toast = useToast();
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
   const {
@@ -52,7 +57,28 @@ export function SignIn() {
   }
 
   async function handleSigIn({ email, password }: FormDataProps) {
-    signIn(email, password);
+    try {
+      await signIn(email, password);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível realizar o login';
+
+      return toast.show({
+        placement: 'top',
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            description={'Tente novamente mais tarde.'}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    }
   }
 
   return (
