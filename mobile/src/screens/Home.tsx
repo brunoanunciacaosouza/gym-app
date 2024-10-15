@@ -1,35 +1,65 @@
-import { useState } from "react";
-import { FlatList } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from 'react';
+import { FlatList } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-import { Heading, HStack, Text, VStack } from "@gluestack-ui/themed";
+import { Heading, HStack, Text, useToast, VStack } from '@gluestack-ui/themed';
 
-import { Group } from "@components/Group";
-import { HomeHeader } from "@components/HomeHeader";
-import { ExerciseCard } from "@components/ExerciseCard";
+import { Group } from '@components/Group';
+import { HomeHeader } from '@components/HomeHeader';
+import { ExerciseCard } from '@components/ExerciseCard';
+import { ToastMessage } from '@components/ToastMessage';
 
-import { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { AppNavigatorRoutesProps } from '@routes/app.routes';
+
+import { AppError } from '@utils/AppError';
+import { api } from '@services/api';
 
 export function Home() {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
+  const toast = useToast();
 
-  const [groups, setGroups] = useState([
-    "Costas",
-    "Biceps",
-    "Triceps",
-    "Ombro",
-  ]);
-  const [groupSelected, setGroupSelected] = useState("Costas");
+  const [groups, setGroups] = useState<string[]>([]);
+  const [groupSelected, setGroupSelected] = useState('Costas');
   const [exercises, setExercises] = useState([
-    "Puxada frontal",
-    "Remada curvada",
-    "Remada unilateral",
-    "Levantamento terra",
+    'Puxada frontal',
+    'Remada curvada',
+    'Remada unilateral',
+    'Levantamento terra',
   ]);
 
   function handleOpenExercisesDetails() {
-    navigation.navigate("exercise");
+    navigation.navigate('exercise');
   }
+
+  async function fetchGroups() {
+    try {
+      const { data } = await api.get('/groups');
+      setGroups(data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível realizar o login';
+
+      toast.show({
+        placement: 'top',
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            description={'Tente novamente mais tarde.'}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    }
+  }
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
 
   return (
     <VStack flex={1}>
