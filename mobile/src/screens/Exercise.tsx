@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { TouchableOpacity, ScrollView } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   VStack,
@@ -15,6 +15,7 @@ import { ArrowLeft } from 'lucide-react-native';
 
 import { Button } from '@components/Button';
 import { ToastMessage } from '@components/ToastMessage';
+import { Loading } from '@components/Loading';
 
 import BodySvg from '@assets/body.svg';
 import SeriesSvg from '@assets/series.svg';
@@ -111,10 +112,9 @@ export function Exercise() {
         </HStack>
       </VStack>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 32 }}
-      >
+      {isLoading ? (
+        <Loading />
+      ) : (
         <VStack p="$8">
           <Box rounded="$lg" mb={3} overflow="hidden">
             <Image
@@ -155,7 +155,7 @@ export function Exercise() {
             <Button title="Marcar como realizado" />
           </Box>
         </VStack>
-      </ScrollView>
+      )}
     </VStack>
   );
 }
