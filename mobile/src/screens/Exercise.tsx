@@ -1,5 +1,5 @@
-import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity, ScrollView } from "react-native";
+import { TouchableOpacity, ScrollView } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   VStack,
   Icon,
@@ -8,18 +8,26 @@ import {
   Text,
   Image,
   Box,
-} from "@gluestack-ui/themed";
-import { ArrowLeft } from "lucide-react-native";
+} from '@gluestack-ui/themed';
+import { ArrowLeft } from 'lucide-react-native';
 
-import { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { Button } from '@components/Button';
 
-import BodySvg from "@assets/body.svg";
-import SeriesSvg from "@assets/series.svg";
-import Repetitions from "@assets/repetitions.svg";
-import { Button } from "@components/Button";
+import { AppNavigatorRoutesProps } from '@routes/app.routes';
+
+import BodySvg from '@assets/body.svg';
+import SeriesSvg from '@assets/series.svg';
+import Repetitions from '@assets/repetitions.svg';
+
+type RouteParams = {
+  exerciseId: number;
+};
 
 export function Exercise() {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
+
+  const route = useRoute();
+  const { exerciseId } = route?.params as RouteParams;
 
   function handleGoBack() {
     navigation.goBack();
@@ -63,7 +71,7 @@ export function Exercise() {
         <VStack p="$8">
           <Image
             source={{
-              uri: "https://static.wixstatic.com/media/2edbed_2e9f85ee0d4b46d0b4f590b3be3e29c6~mv2.webp",
+              uri: 'https://static.wixstatic.com/media/2edbed_2e9f85ee0d4b46d0b4f590b3be3e29c6~mv2.webp',
             }}
             alt="Exercício"
             mb="$3"

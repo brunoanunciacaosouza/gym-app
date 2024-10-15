@@ -26,8 +26,8 @@ export function Home() {
   const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
   const [groupSelected, setGroupSelected] = useState('Costas');
 
-  function handleOpenExercisesDetails() {
-    navigation.navigate('exercise');
+  function handleOpenExercisesDetails(exerciseId: number) {
+    navigation.navigate('exercise', { exerciseId });
   }
 
   async function fetchGroups() {
@@ -142,7 +142,12 @@ export function Home() {
             data={exercises}
             keyExtractor={(item) => String(item.id)}
             renderItem={({ item }) => (
-              <ExerciseCard onPress={handleOpenExercisesDetails} data={item} />
+              <ExerciseCard
+                onPress={() => {
+                  handleOpenExercisesDetails(item.id);
+                }}
+                data={item}
+              />
             )}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 20 }}
