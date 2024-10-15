@@ -1,12 +1,14 @@
+import { TouchableOpacity } from 'react-native';
 import { Heading, HStack, Text, VStack, Icon } from '@gluestack-ui/themed';
-import { UserPhoto } from './UserPhoto';
 import { LogOut } from 'lucide-react-native';
+import { UserPhoto } from './UserPhoto';
+
 import { useAuth } from '@hooks/useAuth';
 
 import defaultPhotoUser from '@assets/userPhotoDefault.png';
 
 export function HomeHeader() {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   return (
     <HStack bg="#202024" pt="$16" pb="$5" px="$8" alignItems="center" gap="$4">
       <UserPhoto
@@ -26,7 +28,9 @@ export function HomeHeader() {
         </Heading>
       </VStack>
 
-      <Icon as={LogOut} color="#C4C4CC" size="xl" />
+      <TouchableOpacity onPress={() => signOut()}>
+        <Icon as={LogOut} color="#C4C4CC" size="xl" />
+      </TouchableOpacity>
     </HStack>
   );
 }
