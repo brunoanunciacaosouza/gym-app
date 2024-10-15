@@ -14,13 +14,15 @@ import { AppNavigatorRoutesProps } from '@routes/app.routes';
 import { AppError } from '@utils/AppError';
 import { api } from '@services/api';
 
+import { ExerciseDTO } from '@dtos/ExerciseDTO';
+
 export function Home() {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
   const toast = useToast();
 
   const [groups, setGroups] = useState<string[]>([]);
+  const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
   const [groupSelected, setGroupSelected] = useState('Costas');
-  const [exercises, setExercises] = useState<string[]>([]);
 
   function handleOpenExercisesDetails() {
     navigation.navigate('exercise');
@@ -128,7 +130,7 @@ export function Home() {
 
         <FlatList
           data={exercises}
-          keyExtractor={(item) => item}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <ExerciseCard onPress={handleOpenExercisesDetails} />
           )}
