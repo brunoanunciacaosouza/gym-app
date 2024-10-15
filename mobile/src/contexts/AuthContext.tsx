@@ -11,6 +11,7 @@ import {
 import {
   storageAuthTokenSave,
   storageAuthTokenGet,
+  storageAuthTokenRemove,
 } from '@storage/storageAuthToken';
 
 export type AuthContextDataProps = {
@@ -69,7 +70,9 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     try {
       setIsLoadingUserData(true);
       setUser({} as UserDTO);
+
       await storageUserRemove();
+      await storageAuthTokenRemove();
     } catch (error) {
       throw error;
     } finally {
