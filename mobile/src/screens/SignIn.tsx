@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -44,6 +44,8 @@ export function SignIn() {
   const toast = useToast();
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -58,15 +60,17 @@ export function SignIn() {
 
   async function handleSigIn({ email, password }: FormDataProps) {
     try {
+      setIsLoading(true);
       await signIn(email, password);
     } catch (error) {
+      setIsLoading(false);
       const isAppError = error instanceof AppError;
 
       const title = isAppError
         ? error.message
         : 'Não foi possível realizar o login';
 
-      return toast.show({
+      toast.show({
         placement: 'top',
         render: ({ id }) => (
           <ToastMessage
@@ -136,7 +140,11 @@ export function SignIn() {
               )}
             />
 
-            <Button title="Acessar" onPress={handleSubmit(handleSigIn)} />
+            <Button
+              title="Acessar"
+              onPress={handleSubmit(handleSigIn)}
+              isLoading={isLoading}
+            />
           </Center>
 
           <Center flex={1} justifyContent="flex-end" mt="$4">
