@@ -13,6 +13,8 @@ import { ChevronRight } from 'lucide-react-native';
 
 import { ExerciseDTO } from '@dtos/ExerciseDTO';
 
+import { api } from '@services/api';
+
 type Props = TouchableOpacityProps & {
   data: ExerciseDTO;
 };
@@ -30,7 +32,7 @@ export function ExerciseCard({ data, ...rest }: Props) {
       >
         <Image
           source={{
-            uri: 'https://static.wixstatic.com/media/2edbed_2e9f85ee0d4b46d0b4f590b3be3e29c6~mv2.webp',
+            uri: `${api.defaults.baseURL}/exercises/thumb/${data.thumb}`,
           }}
           alt="Imagem do exercício"
           w="$16"
