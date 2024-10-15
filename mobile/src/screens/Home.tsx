@@ -24,7 +24,7 @@ export function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [groups, setGroups] = useState<string[]>([]);
   const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
-  const [groupSelected, setGroupSelected] = useState('Costas');
+  const [groupSelected, setGroupSelected] = useState('antebraço');
 
   function handleOpenExercisesDetails(exerciseId: number) {
     navigation.navigate('exercise', { exerciseId });
