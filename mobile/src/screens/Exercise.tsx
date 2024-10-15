@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import {
@@ -8,16 +9,23 @@ import {
   Text,
   Image,
   Box,
+  useToast,
 } from '@gluestack-ui/themed';
 import { ArrowLeft } from 'lucide-react-native';
 
 import { Button } from '@components/Button';
-
-import { AppNavigatorRoutesProps } from '@routes/app.routes';
+import { ToastMessage } from '@components/ToastMessage';
 
 import BodySvg from '@assets/body.svg';
 import SeriesSvg from '@assets/series.svg';
 import Repetitions from '@assets/repetitions.svg';
+
+import { AppNavigatorRoutesProps } from '@routes/app.routes';
+
+import { api } from '@services/api';
+import { AppError } from '@utils/AppError';
+
+import { ExerciseDTO } from '@dtos/ExerciseDTO';
 
 type RouteParams = {
   exerciseId: number;
@@ -25,6 +33,10 @@ type RouteParams = {
 
 export function Exercise() {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
+  const toast = useToast();
+
+  const [exercise, setExercise] = useState({} as ExerciseDTO);
+  const [isLoading, setIsLoading] = useState(true);
 
   const route = useRoute();
   const { exerciseId } = route?.params as RouteParams;
@@ -32,6 +44,41 @@ export function Exercise() {
   function handleGoBack() {
     navigation.goBack();
   }
+
+  async function fetchExercisesDetails() {
+    try {
+      setIsLoading(true);
+
+      const { data } = await api.get(`/exercises/${exerciseId}`);
+
+      setExercise(data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível carregar os detalhes do exercício';
+
+      toast.show({
+        placement: 'top',
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            description={'Tente novamente mais tarde.'}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchExercisesDetails();
+  }, [exerciseId]);
 
   return (
     <VStack flex={1}>
@@ -52,13 +99,13 @@ export function Exercise() {
             fontSize="$lg"
             flexShrink={1}
           >
-            Puxada Frontal
+            {exercise.name}
           </Heading>
 
           <HStack alignItems="center">
             <BodySvg />
             <Text color="#C4C4CC" m="$1" textTransform="capitalize">
-              Costas
+              {exercise.group}
             </Text>
           </HStack>
         </HStack>
@@ -69,17 +116,19 @@ export function Exercise() {
         contentContainerStyle={{ paddingBottom: 32 }}
       >
         <VStack p="$8">
-          <Image
-            source={{
-              uri: 'https://static.wixstatic.com/media/2edbed_2e9f85ee0d4b46d0b4f590b3be3e29c6~mv2.webp',
-            }}
-            alt="Exercício"
-            mb="$3"
-            resizeMode="cover"
-            rounded="$lg"
-            w="$full"
-            h="$80"
-          />
+          <Box rounded="$lg" mb={3} overflow="hidden">
+            <Image
+              source={{
+                uri: `${api.defaults.baseURL}/exercises/thumb/${exercise.demo}`,
+              }}
+              alt="Exercício"
+              mb="$3"
+              resizeMode="cover"
+              rounded="$lg"
+              w="$full"
+              h="$80"
+            />
+          </Box>
 
           <Box bg="#202024" rounded="$md" pb="$4" px="$4">
             <HStack
@@ -91,14 +140,14 @@ export function Exercise() {
               <HStack>
                 <SeriesSvg />
                 <Text color="#C4C4CC" ml="$2">
-                  3 séries
+                  {exercise.series} séries
                 </Text>
               </HStack>
 
               <HStack>
                 <Repetitions />
                 <Text color="#C4C4CC" ml="$2">
-                  12 repetições
+                  {exercise.repetitions} repetições
                 </Text>
               </HStack>
             </HStack>
