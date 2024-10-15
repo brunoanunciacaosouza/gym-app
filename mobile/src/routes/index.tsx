@@ -4,6 +4,7 @@ import { Box } from '@gluestack-ui/themed';
 
 import { AuthRoutes } from './auth.routes';
 import { useAuth } from '@hooks/useAuth';
+import { AppRoutes } from './app.routes';
 
 export function Routes() {
   const { user } = useAuth();
@@ -14,7 +15,7 @@ export function Routes() {
   return (
     <Box flex={1} bg="#121214">
       <NavigationContainer theme={theme}>
-        <AuthRoutes />
+        {user.id ? <AppRoutes /> : <AuthRoutes />}
       </NavigationContainer>
     </Box>
   );
