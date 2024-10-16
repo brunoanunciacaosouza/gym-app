@@ -35,14 +35,18 @@ export function Profile() {
   );
 
   const { user } = useAuth();
-  const { control } = useForm<FormDataProps>({
+  const toast = useToast();
+
+  const { control, handleSubmit } = useForm<FormDataProps>({
     defaultValues: {
       name: user.name,
       email: user.email,
     },
   });
 
-  const toast = useToast();
+  async function handleProfileUpdate(data: FormDataProps) {
+    console.log('test');
+  }
 
   async function HandleUserPhotoSelect() {
     try {
@@ -158,15 +162,49 @@ export function Profile() {
           </Heading>
 
           <Center w="$full" gap="$4">
-            <Input placeholder="Senha antiga" bg="#202024" secureTextEntry />
-            <Input placeholder="Nova senha" bg="#202024" secureTextEntry />
-            <Input
-              placeholder="Confirme a nova senha"
-              bg="#202024"
-              secureTextEntry
+            <Controller
+              control={control}
+              name="old_password"
+              render={({ field: { onChange } }) => (
+                <Input
+                  bg="#202024"
+                  placeholder="Senha antiga"
+                  onChangeText={onChange}
+                  secureTextEntry
+                />
+              )}
             />
 
-            <Button title="Atualizar" />
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange } }) => (
+                <Input
+                  bg="#202024"
+                  placeholder="Nova senha"
+                  onChangeText={onChange}
+                  secureTextEntry
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="confirm_password"
+              render={({ field: { onChange } }) => (
+                <Input
+                  bg="#202024"
+                  placeholder="Confirme a nova senha"
+                  onChangeText={onChange}
+                  secureTextEntry
+                />
+              )}
+            />
+
+            <Button
+              title="Atualizar"
+              onPress={handleSubmit(handleProfileUpdate)}
+            />
           </Center>
         </Center>
       </ScrollView>
