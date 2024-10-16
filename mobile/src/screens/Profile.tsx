@@ -1,18 +1,11 @@
 import { useState } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native';
-import {
-  VStack,
-  Center,
-  Text,
-  Heading,
-  useToast,
-  onChange,
-} from '@gluestack-ui/themed';
+import { VStack, Center, Text, Heading, useToast } from '@gluestack-ui/themed';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
-import * as yup from 'yup';
 
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { ScreenHeader } from '@components/ScreenHeader';
@@ -68,11 +61,11 @@ export function Profile() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormDataProps>({
-    resolver: yupResolver(profileSchema),
     defaultValues: {
       name: user.name,
       email: user.email,
     },
+    resolver: yupResolver(profileSchema),
   });
 
   async function handleProfileUpdate(data: FormDataProps) {
