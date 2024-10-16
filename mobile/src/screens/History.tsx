@@ -11,10 +11,13 @@ import { ToastMessage } from '@components/ToastMessage';
 import { api } from '@services/api';
 import { AppError } from '@utils/AppError';
 
+import { HistoryByDayDTO } from '@dtos/HistoryByDayDTO';
+import { HistoryDTO } from '@dtos/HistoryDTO';
+
 export function History() {
   const toast = useToast();
 
-  const [exercises, setExercises] = useState([]);
+  const [exercises, setExercises] = useState<HistoryByDayDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   async function fetchHistory() {
@@ -22,8 +25,6 @@ export function History() {
       setIsLoading(true);
 
       const { data } = await api.get(`/history`);
-
-      console.log(data);
 
       setExercises(data);
     } catch (error) {
@@ -62,7 +63,7 @@ export function History() {
 
       <SectionList
         sections={exercises}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item: HistoryDTO) => item.id}
         renderItem={({ item }) => <HistoryCard />}
         renderSectionHeader={({ section }) => (
           <Heading
