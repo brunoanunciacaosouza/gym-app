@@ -57,7 +57,7 @@ export function Profile() {
     'https://avatars.githubusercontent.com/u/85529074?v=4',
   );
 
-  const { user } = useAuth();
+  const { user, updateUserProfile } = useAuth();
   const toast = useToast();
 
   const {
@@ -76,7 +76,12 @@ export function Profile() {
     try {
       setIsUpdating(true);
 
+      const userUpdated = user;
+      userUpdated.name = data.name;
+
       await api.put('/users', data);
+
+      await updateUserProfile(userUpdated);
 
       toast.show({
         placement: 'top',
