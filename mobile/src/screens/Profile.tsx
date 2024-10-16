@@ -16,6 +16,9 @@ import { ToastMessage } from '@components/ToastMessage';
 
 import { useAuth } from '@hooks/useAuth';
 
+import { api } from '@services/api';
+import { AppError } from '@utils/AppError';
+
 type FormDataProps = {
   name: string;
   email: string;
@@ -48,6 +51,7 @@ const profileSchema = yup.object({
 });
 
 export function Profile() {
+  const [isUpdating, setIsUpdating] = useState(false);
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [userPhoto, setUserPhoto] = useState(
     'https://avatars.githubusercontent.com/u/85529074?v=4',
@@ -69,7 +73,44 @@ export function Profile() {
   });
 
   async function handleProfileUpdate(data: FormDataProps) {
-    console.log('test');
+    try {
+      setIsUpdating(true);
+
+      await api.put('/users', data);
+
+      toast.show({
+        placement: 'top',
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="success"
+            title="Perfil atualizado com sucesso."
+            description=""
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível atualizar dados da conta';
+
+      toast.show({
+        placement: 'top',
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            description="Tente novamente mais tarde."
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    } finally {
+      setIsUpdating(false);
+    }
   }
 
   async function HandleUserPhotoSelect() {
@@ -231,6 +272,7 @@ export function Profile() {
             <Button
               title="Atualizar"
               onPress={handleSubmit(handleProfileUpdate)}
+              isLoading={isUpdating}
             />
           </Center>
         </Center>
