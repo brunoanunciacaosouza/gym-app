@@ -1,19 +1,46 @@
-import { useState } from "react";
-import { ScrollView, TouchableOpacity } from "react-native";
-import { VStack, Center, Text, Heading, useToast } from "@gluestack-ui/themed";
-import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
+import { useState } from 'react';
+import { ScrollView, TouchableOpacity } from 'react-native';
+import {
+  VStack,
+  Center,
+  Text,
+  Heading,
+  useToast,
+  onChange,
+} from '@gluestack-ui/themed';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 
-import { ScreenHeader } from "@components/ScreenHeader";
-import { UserPhoto } from "@components/UserPhoto";
-import { Input } from "@components/Input";
-import { Button } from "@components/Button";
-import { ToastMessage } from "@components/ToastMessage";
+import { useForm, Controller } from 'react-hook-form';
+
+import { ScreenHeader } from '@components/ScreenHeader';
+import { UserPhoto } from '@components/UserPhoto';
+import { Input } from '@components/Input';
+import { Button } from '@components/Button';
+import { ToastMessage } from '@components/ToastMessage';
+import { useAuth } from '@hooks/useAuth';
+
+type FormDataProps = {
+  name: string;
+  email: string;
+  password: string;
+  old_password: string;
+  confirm_password: string;
+};
 
 export function Profile() {
+  const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [userPhoto, setUserPhoto] = useState(
-    "https://avatars.githubusercontent.com/u/85529074?v=4"
+    'https://avatars.githubusercontent.com/u/85529074?v=4',
   );
+
+  const { user } = useAuth();
+  const { control } = useForm<FormDataProps>({
+    defaultValues: {
+      name: user.name,
+      email: user.email,
+    },
+  });
 
   const toast = useToast();
 
@@ -39,7 +66,7 @@ export function Profile() {
 
         if (photoInfo.size && photoInfo.size / 1024 / 1024 > 5) {
           return toast.show({
-            placement: "top",
+            placement: 'top',
             render: ({ id }) => (
               <ToastMessage
                 id={id}
@@ -91,8 +118,32 @@ export function Profile() {
           </TouchableOpacity>
 
           <Center w="$full" gap="$4">
-            <Input placeholder="Nome" bg="#202024" />
-            <Input value="email@email.com" bg="#202024" isReadOnly />
+            <Controller
+              control={control}
+              name="name"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  placeholder="Nome"
+                  bg="#202024"
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  bg="#202024"
+                  placeholder="E-mail"
+                  onChangeText={onChange}
+                  value={value}
+                  isReadOnly
+                />
+              )}
+            />
           </Center>
 
           <Heading
