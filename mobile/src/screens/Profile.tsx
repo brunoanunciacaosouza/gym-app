@@ -19,6 +19,8 @@ import { useAuth } from '@hooks/useAuth';
 import { api } from '@services/api';
 import { AppError } from '@utils/AppError';
 
+import defaultUserPhotoImg from '@assets/userPhotoDefault.png';
+
 type FormDataProps = {
   name: string;
   email: string;
@@ -51,14 +53,10 @@ const profileSchema = yup.object({
 });
 
 export function Profile() {
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [photoIsLoading, setPhotoIsLoading] = useState(false);
-  const [userPhoto, setUserPhoto] = useState(
-    'https://avatars.githubusercontent.com/u/85529074?v=4',
-  );
-
   const { user, updateUserProfile } = useAuth();
   const toast = useToast();
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [photoIsLoading, setPhotoIsLoading] = useState(false);
 
   const {
     control,
@@ -119,6 +117,8 @@ export function Profile() {
   }
 
   async function HandleUserPhotoSelect() {
+    setPhotoIsLoading(true);
+
     try {
       const photoSelected = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -153,10 +153,38 @@ export function Profile() {
           });
         }
 
-        setUserPhoto(photoUri);
+        const fileExtension = photoUri.split('.').pop();
+
+        const photoFile = {
+          name: `${user.name}.${fileExtension}`.toLowerCase(),
+          uri: photoUri,
+          type: `${photoSelected.assets[0].type}/${fileExtension}`,
+        } as any;
+
+        const userPhotoUploadForm = new FormData();
+
+        userPhotoUploadForm.append('avatar', photoFile);
+
+        const avatarUpdatedResponse = await api.patch(
+          '/users/avatar',
+          userPhotoUploadForm,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        );
+
+        const userUpdated = user;
+
+        userUpdated.avatar = avatarUpdatedResponse.data.avatar;
+
+        await updateUserProfile(userUpdated);
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setPhotoIsLoading(false);
     }
   }
 
@@ -170,9 +198,11 @@ export function Profile() {
       >
         <Center mt="$6" px="$10">
           <UserPhoto
-            source={{
-              uri: userPhoto,
-            }}
+            source={
+              user.avatar
+                ? { uri: `${api.defaults.baseURL}avatar/${user.avatar}` }
+                : defaultUserPhotoImg
+            }
             alt="Foto do usuário"
             size="xl"
           />

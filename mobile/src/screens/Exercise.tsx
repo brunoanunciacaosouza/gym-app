@@ -164,7 +164,7 @@ export function Exercise() {
           <Box rounded="$lg" mb={3} overflow="hidden">
             <Image
               source={{
-                uri: `${api.defaults.baseURL}/exercises/thumb/${exercise.demo}`,
+                uri: `${api.defaults.baseURL}exercise/demo/${exercise.demo}`,
               }}
               alt="Exercício"
               mb="$3"
